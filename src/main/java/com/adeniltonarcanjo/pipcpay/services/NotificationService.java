@@ -26,8 +26,6 @@ public class NotificationService {
             throw new Exception(" Serviço de notificação esta fora do ar");
 
         }
-
-
     }
 
 
