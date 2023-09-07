@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,10 +28,13 @@ public class TransactionService {
     @Autowired
     private RestTemplate restTemplate; // diponibilizado pelo spring para fazer requisições
 
+    @Autowired
+    private NotificationService notificationService;
+
     String urlAuthorize= "https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6";
 
 
-    public void CreateTransection(TransactionDTO transactionDTO) throws Exception {
+    public Transaction createTransection(TransactionDTO transactionDTO) throws Exception {
         User sender = this.userServicice.findUserById(transactionDTO.senderId());
         User receiver = this.userServicice.findUserById(transactionDTO.receiverId());
 
@@ -54,6 +58,11 @@ public class TransactionService {
           this.userServicice.saveUser(sender);
           this.userServicice.saveUser(receiver);
 
+          this.notificationService.sendNotification(sender, "Transação realizada com sucesso");
+          this.notificationService.sendNotification(receiver,"Transação recebida com sucesso");
+
+          return transaction;
+
         }
     }
 
@@ -67,7 +76,8 @@ public class TransactionService {
            String message =(String)authorizationResponse.getBody().get("message");
           return message.equalsIgnoreCase("Autorizado");
         } else return false;
-
-
     }
+
+
+
 }
