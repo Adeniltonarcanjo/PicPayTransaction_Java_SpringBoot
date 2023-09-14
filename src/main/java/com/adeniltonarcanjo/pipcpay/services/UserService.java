@@ -31,13 +31,19 @@ public class UserService {
 
     public User findUserById( Long id ) {
         return this.repository.findUserById(id).orElseThrow(()->
-                new ObjectNotFoundException("Usuario não encontrado!  ID: "+id + "tipo do objeto "+ User.class.getName()));
+                new ObjectNotFoundException("User Not Found!  ID: "+id + "Object Type "+ User.class.getName()));
     }
 
     public User createUser(UserDTO userDTO){
         User newUser = new User(userDTO);
         this.saveUser(newUser);
         return newUser;
+    }
+
+    public User findUserByDocumment(String documment){
+        return this.repository.findUserByDocument(documment).orElseThrow(()->
+                new ObjectNotFoundException("User Not Found! Documment: "+ documment+ " Object Type "
+                + User.class.getName()));
     }
 
     public List<User> getAllUsers(){
