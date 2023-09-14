@@ -5,6 +5,7 @@ import com.adeniltonarcanjo.pipcpay.domain.user.User;
 import com.adeniltonarcanjo.pipcpay.domain.user.UserType;
 import com.adeniltonarcanjo.pipcpay.dtos.UserDTO;
 import com.adeniltonarcanjo.pipcpay.repositories.UserRepository;
+import com.adeniltonarcanjo.pipcpay.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,9 @@ public class UserService {
     }
 
 
-    public User findUserById( Long id ) throws Exception{
-        return this.repository.findUserById(id).orElseThrow(()-> new Exception("Usuario não encontrado"));
+    public User findUserById( Long id ) {
+        return this.repository.findUserById(id).orElseThrow(()->
+                new ObjectNotFoundException("Usuario não encontrado!  ID: "+id + "tipo do objeto "+ User.class.getName()));
     }
 
     public User createUser(UserDTO userDTO){

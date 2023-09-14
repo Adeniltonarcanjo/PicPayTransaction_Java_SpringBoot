@@ -30,4 +30,14 @@ public class UserController {
        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> findUserById(@PathVariable Long id) throws Exception {
+        User user= this.Userservice.findUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
+
+
+
 }
