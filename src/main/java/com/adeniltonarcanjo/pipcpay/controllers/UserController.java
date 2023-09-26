@@ -15,33 +15,39 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService UserService;
+    private UserService userService;
 
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody UserDTO user){
-        User newUser= UserService.createUser(user);
+        User newUser= userService.createUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
-       List<User> users= this.UserService.getAllUsers();
+       List<User> users= this.userService.getAllUsers();
        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Long id) {
-        User user= this.UserService.findUserById(id);
+        User user= this.userService.findUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "documment/{documment}")
     public ResponseEntity<User> findUserByDocument(@PathVariable String documment){
-
-        User user = this.UserService.findUserByDocumment(documment);
+        User user = this.userService.findUserByDocumment(documment);
         return new ResponseEntity<>(user,HttpStatus.OK);
+
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
 
     }
 

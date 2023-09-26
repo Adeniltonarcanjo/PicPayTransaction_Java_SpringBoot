@@ -5,6 +5,7 @@ import com.adeniltonarcanjo.pipcpay.domain.user.User;
 import com.adeniltonarcanjo.pipcpay.domain.user.UserType;
 import com.adeniltonarcanjo.pipcpay.dtos.UserDTO;
 import com.adeniltonarcanjo.pipcpay.repositories.UserRepository;
+import com.adeniltonarcanjo.pipcpay.services.exceptions.DataIntegrityViolationException;
 import com.adeniltonarcanjo.pipcpay.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,11 @@ public class UserService {
 
     public void validateTransaction(User sender, BigDecimal amount) throws Exception{
         if (sender.getUserType()== UserType.MERCHANT){
-            throw new Exception(" usuario do tipo logista não esta autorizado a realizar tranzação");
+            throw new Exception("unauthorized user");
         }
 
         if (sender.getBalance().compareTo(amount)<0){
-            throw new Exception("saldo insuficiente");
+            throw new Exception("insufficient balance");
         }
     }
 
@@ -51,7 +52,19 @@ public class UserService {
     }
 
     public void saveUser(User user ){
-        this.repository.save(user);
+        try {
+            this.repository.save(user);
+        } catch(org.springframework.dao.DataIntegrityViolationException e){
+                throw new com.adeniltonarcanjo.pipcpay.services.exceptions.DataIntegrityViolationException("User document or email already exist");
+        }
+
     }
 
+
+    public void delete(Long id) {
+        findUserById(id);
+
+            repository.deleteById(id);
+
+    }
 }
